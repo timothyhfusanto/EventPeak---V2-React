@@ -1,0 +1,13 @@
+.main-footer  {
+    display: flex;
+    position:fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: whitesmoke;
+    color: black;
+    align-items: center;
+    justify-content: center;
+    height:30px;
+    padding:12px;
+}
