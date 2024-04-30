@@ -20,26 +20,36 @@ const Api = {
 		  })
 		  .then((data) => {
 			token = data.token;
-			console.log(token);
+			localStorage.setItem("token", token);
 		  });
 	},
 
 	searchEvents(title) {
 		return fetch(`${SERVER_PREFIX}/events/query?title=${title}`, {
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			}
 		}); 
 	},
 
-	getCustomer(cId) {
-		return fetch(`${SERVER_PREFIX}/customers/${cId}`, {
+	getProfile() {
+		return fetch(`${SERVER_PREFIX}/customers/profile`, {
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			}
 		});
 	},
 
+	createCustomer(customer) {
+		return fetch(`${SERVER_PREFIX}/customers`, {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(customer),
+		});
+	}
 };
 
 export default Api;

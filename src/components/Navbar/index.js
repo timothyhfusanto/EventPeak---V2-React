@@ -13,8 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Link } from 'react-router-dom';
-import isAuthenticated from '../../helpers/auth';
+import { Link, useNavigate } from 'react-router-dom';
 
 const pages = [{
   settings: 'Home',
@@ -42,10 +41,13 @@ export default function Navbar () {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
+  const navigate = useNavigate();
   
+  const local = localStorage.getItem("token");
+
   useEffect(() => {
-    setAuthenticated(isAuthenticated());
-  }, [authenticated])
+    setAuthenticated(local !== null)
+  }, [local]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -61,6 +63,12 @@ export default function Navbar () {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const logout = () => {
+    setAnchorElUser(null);
+    localStorage.removeItem('token');
+    navigate('/');
+  }
 
   return (
     <AppBar sx={{background:"#191919"}}>
@@ -205,7 +213,7 @@ export default function Navbar () {
                   
                 ))}
                 <MenuItem 
-                  onClick={handleCloseUserMenu}
+                  onClick={logout}
                   sx={{ color: 'red' }}
                 >
                   <LogoutIcon />

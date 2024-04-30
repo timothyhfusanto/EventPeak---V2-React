@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Api from '../../helpers/Api';
-import EventCard from '../../components/Card';
+import EventCard from '../../components/EventCard';
 import EventDetail from '../../components/EventDetail';
 import { Grid, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -12,10 +12,6 @@ export default function Landing() {
 	const {id = 0} = useParams();
 
 	useEffect(() => {
-		reloadData();
-	});
-	
-	const reloadData = () => {
 		Api.searchEvents(searchInput)
 			.then(response => response.json())
 			.then(events => {
@@ -26,8 +22,9 @@ export default function Landing() {
 					event.deadline = deadline.substring(0, deadline.length - 5);
 				}
 				setData(events);
+				console.log(events);
 			});
-	};
+	}, [searchInput]);
 
 	const handleInputChange = (e) => {
 		setSearchInput(e.target.value.toLowerCase());
@@ -37,14 +34,14 @@ export default function Landing() {
 		if (id > 0) {
 			let selectedEvent = null;
 			for (const event of data) {
-				if (event.eventId === id) {
+				if (event.eventId === parseInt(id)) {
 					selectedEvent = event;
 				}
 			}
 			return (
 				<>
 					<EventDetail {...selectedEvent} />
-					<Link to={`/`}>
+					<Link to={`/authenticated`}>
 						<Button variant="contained">Back</Button>
 					</Link>
 				</>
@@ -65,16 +62,15 @@ export default function Landing() {
 					/>
 					<Grid container spacing={2}>
 						{data.map(event => (
-							<Link to={`/${event.eventId}}`}>
 								<Grid item xs={4} key={event.eventId}>
-									<EventCard {...event} />
+									<Link to={`/authenticated/${event.eventId}`}>
+										<EventCard {...event} />
+									</Link>
 								</Grid>
-							</Link>
 						))}
 					</Grid>
 				</>
 			);
-		
 		}
 	}
 
